@@ -16,7 +16,7 @@ app.use('/game', gameRoutes);
 app.use(errorHandler);
 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send('The server is running!');
 });
 
 sequelize.sync().then(() => {
