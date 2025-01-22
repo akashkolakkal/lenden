@@ -11,6 +11,7 @@
    - [Make a Move](#make-a-move)
    - [Get Game History](#get-game-history)
 6. [Database Schema](#database-schema)
+7. [Deployment](#deployment)
 
 ## Introduction
 This project is a backend API for a Tic-Tac-Toe game. The API allows users to start a new game, make moves, and retrieve game history.
@@ -262,3 +263,65 @@ Retrieve the history of games for the authenticated user.
     );
     ```
 
+## Deployment
+
+The backend API is deployed and can be accessed at the following IP address and port:
+
+**IP Address**: `65.1.148.183`  
+**Port**: `3000`
+
+### GitHub Workflow for Automated Deployment
+
+Every time a push is made to the `main` branch, the following GitHub Actions workflow will automatically deploy the backend to the EC2 instance:
+
+1. **SSH into EC2**
+2. **Stop the running `npm start` process**
+3. **Pull the latest changes from GitHub**
+4. **Install updated dependencies**
+5. **Restart the `npm start` process**
+
+```yaml
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH key for EC2 access
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.EC2_KEY }}
+
+    - name: SSH into EC2 and deploy the application
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          # Stop the currently running npm server by killing the process
+          echo "Stopping existing npm server..."
+          pkill -f 'npm start' || true
+          
+          # Pull the latest changes from the repository
+          echo "Pulling the latest code from GitHub..."
+          cd /lenden
+          git pull origin main
+          
+           # CD into the server directory
+          echo "CD into the server directory..."
+          cd /server
+
+          # Install the dependencies
+          echo "Installing dependencies..."
+          npm install
+          
+          # Start the server again
+          echo "Starting the server..."
+          nohup npm start &  # Run npm start in the background
+        EOF
