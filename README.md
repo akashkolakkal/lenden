@@ -1,2 +1,0 @@
-# lenden
-LenDenClub Backend Assignment
