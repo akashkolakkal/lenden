@@ -17,18 +17,28 @@ jobs:
       run: echo "${{ secrets.EC2_KEY }}" > private_key.pem
       shell: bash
 
-    - name: Stop running npm server
+    - name: SSH into EC2 and deploy the application
       run: |
-        ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} "pkill -f 'npm start' || true"
-      
-    - name: Pull latest code from GitHub
-      run: |
-        ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} "cd /lenden && git pull origin main"
+        chmod 600 private_key.pem
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          # Stop the currently running npm server by killing the process
+          echo "Stopping existing npm server..."
+          pkill -f 'npm start' || true
+          
+          # Pull the latest changes from the repository
+          echo "Pulling the latest code from GitHub..."
+          cd home/ubuntu/lenden
+          git pull origin main
+          
+           # CD into the server directory
+          echo "CD into the server directory..."
+          cd home/ubuntu/lenden/server
 
-    - name: Install dependencies and restart the server
-      run: |
-        ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-          cd /lenden
+          # Install the dependencies
+          echo "Installing dependencies..."
           npm install
+          
+          # Start the server again
+          echo "Starting the server..."
           nohup npm start &  # Run npm start in the background
         EOF
