@@ -1,0 +1,44 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH key for EC2 access
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.EC2_KEY }}
+
+    - name: SSH into EC2 and deploy the application
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          # Stop the currently running npm server by killing the process
+          echo "Stopping existing npm server..."
+          pkill -f 'npm start' || true
+          
+          # Pull the latest changes from the repository
+          echo "Pulling the latest code from GitHub..."
+          cd /lenden
+          git pull origin main
+          
+           # CD into the server directory
+          echo "CD into the server directory..."
+          cd /server
+
+          # Install the dependencies
+          echo "Installing dependencies..."
+          npm install
+          
+          # Start the server again
+          echo "Starting the server..."
+          nohup npm start &  # Run npm start in the background
+        EOF
