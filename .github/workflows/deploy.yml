@@ -13,14 +13,14 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
 
-    - name: Set up SSH key for EC2 access
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.EC2_KEY }}
+    - name: Set up EC2 private key for SSH access
+      run: echo "${{ secrets.EC2_KEY }}" > private_key.pem
+      shell: bash
 
     - name: SSH into EC2 and deploy the application
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+        chmod 600 private_key.pem
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
           # Stop the currently running npm server by killing the process
           echo "Stopping existing npm server..."
           pkill -f 'npm start' || true
