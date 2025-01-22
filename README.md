@@ -66,9 +66,60 @@ To build the project, ensure all dependencies are installed and the environment 
 
 ## API Endpoints
 
+### Register
+
+Register a new player.
+
+**POST** `/auth/register`
+
+#### Request Body:
+```json
+{
+  "username": "p2",
+  "password": "2"
+}
+```
+
+#### Response:
+```json
+{
+    "message": "User registered",
+    "user": {
+        "id": 2,
+        "username": "p2",
+        "password": "$2b$10$oliScgPEKBlwpa99zyKh5ORc1lrzJo9heIaZLz3twqt/St30q37QC",
+        "updatedAt": "2025-01-22T08:18:41.218Z",
+        "createdAt": "2025-01-22T08:18:41.218Z"
+    }
+}
+```
+
+### Login
+
+Login to a player account.
+
+**POST** `/auth/login`
+
+#### Request Body:
+```json
+{
+  "username": "p1",
+  "password": "1"
+}
+```
+
+#### Response:
+```json
+{
+    "message": "Logged in"
+}
+```
+
+This sets the jwt auth token in the clients cookies.
+
 ### Start a New Game
 
-**POST** `/start`
+**POST** `/game/start`
 
 Start a new Tic-Tac-Toe game between two players.
 
@@ -90,7 +141,7 @@ Start a new Tic-Tac-Toe game between two players.
 
 ### Make a Move
 
-**POST** `/move`
+**POST** `/game/move`
 
 Make a move in an ongoing game.
 
@@ -116,7 +167,7 @@ Make a move in an ongoing game.
 
 ### Get Game History
 
-**GET** `/history`
+**GET** `game/history`
 
 Retrieve the history of games for the authenticated user.
 
