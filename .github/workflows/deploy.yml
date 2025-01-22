@@ -15,30 +15,18 @@ jobs:
 
     - name: Set up EC2 private key for SSH access
       run: echo "${{ secrets.EC2_KEY }}" > private_key.pem
-      shell: bash
+      # shell: bash
 
-    - name: SSH into EC2 and deploy the application
+    - name: SSH into EC2 and stop the server
       run: |
         chmod 600 private_key.pem
-        ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-          # Stop the currently running npm server by killing the process
-          echo "Stopping existing npm server..."
-          pkill -f 'npm start' || true
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "pkill -f 'npm start' || true"
           
-          # Pull the latest changes from the repository
-          echo "Pulling the latest code from GitHub..."
-          cd home/ubuntu/lenden
-          git pull origin main
-          
-           # CD into the server directory
-          echo "CD into the server directory..."
-          cd home/ubuntu/lenden/server
+    - name: Pull the latest changes from the repository
+      run: |
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden && git pull origin main"
 
-          # Install the dependencies
-          echo "Installing dependencies..."
-          npm install
-          
-          # Start the server again
-          echo "Starting the server..."
-          nohup npm start &  # Run npm start in the background
+    - name: Deploy the server
+      run: |
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden/server && npm install && nohup npm start &"
         EOF
