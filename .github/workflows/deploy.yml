@@ -27,12 +27,12 @@ jobs:
           
           # Pull the latest changes from the repository
           echo "Pulling the latest code from GitHub..."
-          cd /lenden
+          cd home/ubuntu/lenden
           git pull origin main
           
            # CD into the server directory
           echo "CD into the server directory..."
-          cd /server
+          cd home/ubuntu/lenden/server
 
           # Install the dependencies
           echo "Installing dependencies..."
