@@ -11,7 +11,6 @@
    - [Make a Move](#make-a-move)
    - [Get Game History](#get-game-history)
 6. [Database Schema](#database-schema)
-7. [Migrations](#migrations)
 
 ## Introduction
 This project is a backend API for a Tic-Tac-Toe game. The API allows users to start a new game, make moves, and retrieve game history.
@@ -39,6 +38,9 @@ This project is a backend API for a Tic-Tac-Toe game. The API allows users to st
     ```bash
     npm start
     ```
+
+3. The application will automatically handle database creation upon startup. A `database.sqlite` file will be created in the project directory.
+
 
 ## Running the Project
 

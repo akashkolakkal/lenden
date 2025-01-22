@@ -134,8 +134,6 @@ exports.getGameHistory = async (req, res, next) => {
       const opponent = game.player1Id === userId ? game.player2 : game.player1;
       let result;
 
-      console.log(game.status, game.winnerId, userId);
-      
       if (game.status === 'finished') {
         result = game.winnerId === userId ? 'win' : 'lose';
       } else if (game.status === 'draw') {
