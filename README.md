@@ -271,6 +271,7 @@ The backend API is deployed and can be accessed at the following IP address and 
 **Port**: `3000`
 
 ### GitHub Workflow for Automated Deployment
+(Under development due to time constraints)
 
 Every time a push is made to the `main` branch, the following GitHub Actions workflow will automatically deploy the backend to the EC2 instance:
 
@@ -325,3 +326,4 @@ jobs:
           echo "Starting the server..."
           nohup npm start &  # Run npm start in the background
         EOF
+
