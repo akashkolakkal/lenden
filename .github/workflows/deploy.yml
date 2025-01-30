@@ -25,9 +25,9 @@ jobs:
           
     - name: Pull the latest changes from the repository
       run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden && sudo git pull"
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd lenden && sudo git pull"
 
     - name: Deploy the server
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden/server && npm install && nohup npm start &"
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden/server && npm install && nohup npm start"
       continue-on-error: true
