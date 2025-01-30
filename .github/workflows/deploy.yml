@@ -13,20 +13,21 @@ jobs:
     - name: Checkout the code
       uses: actions/checkout@v2
 
-    - name: Set up EC2 private key for SSH access
-      run: echo "${{ secrets.EC2_KEY }}" > private_key.pem
+    - name: Install SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.EC2_KEY }}
       # shell: bash
 
     - name: SSH into EC2 and stop the server
       run: |
-        chmod 600 private_key.pem
-        ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "pkill -f 'npm start' || true"
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "pkill -f node"
           
     - name: Pull the latest changes from the repository
       run: |
-          ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden && git pull origin main"
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden && sudo git pull"
 
     - name: Deploy the server
       run: |
-        ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden/server && npm install && nohup npm start &"
-        EOF
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden/server && npm install && nohup npm start &"
+      continue-on-error: true
