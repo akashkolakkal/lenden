@@ -17,17 +17,16 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.EC2_KEY }}
-      # shell: bash
 
     - name: SSH into EC2 and stop the server
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "pkill -f node"
-          
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "pkill -f node || echo 'No node process found'"
+
     - name: Pull the latest changes from the repository
       run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd lenden && sudo git pull"
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd /home/ubuntu/lenden && sudo git pull"
 
     - name: Deploy the server
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd home/ubuntu/lenden/server && npm install && nohup npm start"
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd /home/ubuntu/lenden/server && npm install && nohup npm start"
       continue-on-error: true
