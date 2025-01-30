@@ -20,13 +20,22 @@ jobs:
 
     - name: SSH into EC2 and stop the server
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "pkill -f node || echo 'No node process found'"
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+        pm2 stop all || echo "No PM2 process found"
+        EOF
 
     - name: Pull the latest changes from the repository
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd /home/ubuntu/lenden && sudo git pull"
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+        cd /home/ubuntu/lenden
+        git reset --hard origin/main
+        git pull origin main
+        EOF
 
-    - name: Deploy the server
+    - name: Install dependencies and restart server
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} "cd /home/ubuntu/lenden/server && npm install && nohup npm start"
-      continue-on-error: true
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+        cd /home/ubuntu/lenden/server
+        npm install
+        pm2 restart all || pm2 start npm --name "lenden-server" -- start
+        EOF
