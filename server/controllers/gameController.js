@@ -9,7 +9,6 @@ const winningCombinations = [
   [0, 4, 8], [2, 4, 6]            // Diagonals
 ];
 
-// Start a new game
 exports.startGame = async (req, res, next) => {
   try {
     const { player2Id } = req.body;
@@ -28,7 +27,6 @@ exports.startGame = async (req, res, next) => {
   }
 };
 
-// Make a move
 exports.makeMove = async (req, res, next) => {
   try {
     const { gameId, position } = req.body;
@@ -84,7 +82,6 @@ exports.makeMove = async (req, res, next) => {
   }
 };
 
-// Get game history
 exports.getGameHistory = async (req, res, next) => {
   try {
     const userId = req.user.id;

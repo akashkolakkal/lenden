@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('./index');
-const User = require('./user'); // Import User model
+const User = require('./user'); 
 
 const Game = sequelize.define('Game', {
   player1Id: {

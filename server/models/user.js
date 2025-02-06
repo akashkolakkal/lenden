@@ -13,6 +13,4 @@ const User = sequelize.define('User', {
   },
 });
 
-// No need to add any associations in the User model unless required
-
 module.exports = User;

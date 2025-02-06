@@ -268,7 +268,7 @@ Retrieve the history of games for the authenticated user.
 The backend API is deployed and can be accessed at the following IP address and port:
 
 **IP Address**: `65.1.148.183`  
-**Port**: `3000`
+<!-- **Port**: `3000` -->
 
 ### GitHub Workflow for Automated Deployment
 (Under development due to time constraints)

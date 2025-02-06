@@ -1,4 +1,3 @@
-// src/controllers/authController.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -41,7 +40,7 @@ exports.login = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const { username, password, newPassword } = req.body;
-    const userId = req.user.id;  // Assuming you have a middleware that adds the logged-in user to req.user
+    const userId = req.user.id;  
     
     const user = await User.findOne({ where: { id: userId } });
 

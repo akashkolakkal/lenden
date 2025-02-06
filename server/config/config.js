@@ -1,5 +1,3 @@
-// config.js
-
 require('dotenv').config();
 
 module.exports = {
@@ -8,8 +6,8 @@ module.exports = {
   },
   db: {
     dialect: 'sqlite',
-    storage: './database.sqlite', // Path to SQLite file
-    logging: false, // Disable logging in production
+    storage: './database.sqlite', 
+    logging: false, 
   },
   jwt: {
     secret: process.env.JWT_SECRET,

@@ -7,9 +7,8 @@ const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
-// Dynamically set port based on NODE_ENV
 const port = process.env.NODE_ENV === 'production' ? 80 : 3000;
-const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+const host = '0.0.0.0' ;
 
 app.use(bodyParser.json());
 app.use('/auth', authRoutes);
